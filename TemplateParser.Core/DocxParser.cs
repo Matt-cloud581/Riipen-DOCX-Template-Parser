@@ -6,57 +6,75 @@ public sealed class DocxParser
 {
     public ParserResult ParseDocxTemplate(string filePath, Guid templateId)
     {
+        // Map Word heading styles to node types
+        var headingMap = new Dictionary<string, (string nodeType, int level)>
         {
-    // 1. Open the word document in read mode.
-    // 2. Parse the document.xml into XML object using the DocumentFormat.OpenXml library.
-    using (WordprocessingDocument wordProcessingDocument = WordprocessingDocument.Open(filePath, false))
-    {
-        // The original line we wrote in class:
-        // Body body = wordProcessingDocument.MainDocumentPart.Document.Body;
-        
-        // A more robust version that fails gracefully if the document is not structured properly:
-        Body? body = wordProcessingDocument?.MainDocumentPart?.Document?.Body;
-        ArgumentNullException.ThrowIfNull(body, "Document is empty.");
-        
-        // 3. Loop through every paragraph.
-        foreach (Paragraph p in body.Descendants<Paragraph>())
+            { "Heading1", ("section", 1) },
+            { "Heading2", ("subsection", 2) },
+            { "Heading3", ("subsubsection", 3) }
+        };
+
+        var nodes = new List<Node>();
+        // Stack: (node, heading level, sibling order)
+        var stack = new Stack<(Node node, int level, int siblingIndex)>();
+        var siblingOrder = new Dictionary<Guid, int>(); // parentId -> next orderIndex
+
+        using (WordprocessingDocument wordProcessingDocument = WordprocessingDocument.Open(filePath, false))
         {
-            // 4. Extract and display the paragraph style.
-            // The original line we wrote in class:
-            // string style = p?.ParagraphProperties?.ParagraphStyleId?.Val;
-            // A more robust version:
-            string? style = p?.ParagraphProperties?.ParagraphStyleId?.Val ?? "No Style";
-            Console.WriteLine(style);
+            Body? body = wordProcessingDocument?.MainDocumentPart?.Document?.Body;
+            ArgumentNullException.ThrowIfNull(body, "Document is empty.");
 
-            // 5. Extract and display the actual text.
-            string? text = p?.InnerText;
-            Console.WriteLine(text);
+            foreach (Paragraph p in body.Descendants<Paragraph>())
+            {
+                string? style = p?.ParagraphProperties?.ParagraphStyleId?.Val;
+                string? text = p?.InnerText?.Trim();
+                if (string.IsNullOrWhiteSpace(style) || string.IsNullOrWhiteSpace(text))
+                    continue;
 
-            // I added the following line to space the output out a little better:
-            Console.WriteLine("--------------------------------");
+                // Normalize style name (Word can use Heading1, Heading2, etc.)
+                if (!headingMap.TryGetValue(style, out var map))
+                    continue;
+
+                var nodeType = map.nodeType;
+                var level = map.level;
+
+                // Pop stack until we find the parent for this heading level
+                while (stack.Count > 0 && stack.Peek().level >= level)
+                {
+                    stack.Pop();
+                }
+
+                Guid? parentId = stack.Count > 0 ? stack.Peek().node.Id : null;
+                int orderIndex = 0;
+                if (parentId.HasValue)
+                {
+                    if (!siblingOrder.ContainsKey(parentId.Value)) siblingOrder[parentId.Value] = 0;
+                    orderIndex = siblingOrder[parentId.Value]++;
+                }
+                else
+                {
+                    // Root node
+                    if (!siblingOrder.ContainsKey(Guid.Empty)) siblingOrder[Guid.Empty] = 0;
+                    orderIndex = siblingOrder[Guid.Empty]++;
+                }
+
+                var node = new Node
+                {
+                    Id = Guid.NewGuid(),
+                    TemplateId = templateId,
+                    ParentId = parentId,
+                    Type = nodeType,
+                    Title = text,
+                    OrderIndex = orderIndex,
+                    MetadataJson = "{}"
+                };
+                nodes.Add(node);
+                stack.Push((node, level, orderIndex));
+            }
         }
-    }
-        }
-        // TODO (Week 1-4): Implement core DOCX parsing here.
-        // Recommended responsibilities for this method:
-        // 1) [Week 1] Learn DOCX structure and print paragraphs from the document.
-        // 2) [Week 2] Build section hierarchy using Word heading styles.
-        // 3) [Week 3] Detect tables, lists, and images as structured content nodes.
-        // 4) [Week 4] Add formatting heuristics for files missing heading styles.
-        // 5) [Week 2-4] Create Node instances with:
-        //    - Id: new Guid for each node
-        //    - TemplateId: the templateId argument
-        //    - ParentId: null for root nodes, set for child nodes
-        //    - Type/Title/OrderIndex/MetadataJson based on parsed content
-        // 6) [Week 4] Return ParserResult with Nodes in deterministic order.
-        //
-        // Helper guidance [Week 3-6]:
-        // - YES, create helper classes if this method gets long or hard to read.
-        // - Keep helpers inside TemplateParser.Core (for example, Parsing/ or Utilities/ folders).
-        // - Keep this method as the high-level orchestration entry point.
-        // - In Week 6, refactor large blocks from this method into focused helper classes.
-        //
-        // Do not place parsing logic in the CLI project; keep it in Core.
-        throw new NotImplementedException("DOCX parsing is intentionally not implemented in this starter repository.");
+
+        // Sort nodes by parentId, then orderIndex for deterministic output
+        nodes = nodes.OrderBy(n => n.ParentId ?? Guid.Empty).ThenBy(n => n.OrderIndex).ToList();
+        return new ParserResult { Nodes = nodes };
     }
 }
