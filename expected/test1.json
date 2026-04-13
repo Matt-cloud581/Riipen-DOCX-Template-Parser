@@ -1,0 +1,347 @@
+{
+    "nodes": [
+      {
+        "id": "00000000-0000-4000-8000-000000000001",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": null,
+        "type": "text",
+        "title": "Text",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"Last Updated March 13, 2020 EDA Preliminary Engineering Report Requirements-Hints\"}"
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000002",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": null,
+        "type": "text",
+        "title": "Text",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"All applications for construction and design assistance must complete the Preliminary Engineering Report (PER) as outlined in the ED-900C. The following outline provides more detailed information on these requirements in order to assist Applicants in preparing their application.\"}"
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000003",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": null,
+        "type": "text",
+        "title": "Text",
+        "orderIndex": 2,
+        "metadataJson": "{\"defaultText\":\"Items listed in “Blue Bold” font are intended to provide additional guidance.\"}"
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000004",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": null,
+        "type": "text",
+        "title": "Text",
+        "orderIndex": 3,
+        "metadataJson": "{\"defaultText\":\"All items must be consistent in this report, SF-424 application, ED-900, Environmental Report, exhibits and any other document.\"}"
+      },
+  
+      {
+        "id": "00000000-0000-4000-8000-000000000005",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": null,
+        "type": "section",
+        "title": "C. Preliminary Engineering Report",
+        "orderIndex": 4,
+        "metadataJson": null
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000006",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "00000000-0000-4000-8000-000000000005",
+        "type": "text",
+        "title": "C. Preliminary Engineering Report",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"To be considered for assistance, all construction and design applications must include a Preliminary Engineering Report (PER) that at a minimum provides the following information:\"}"
+      },
+  
+      {
+        "id": "00000000-0000-4000-8000-000000000007",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "00000000-0000-4000-8000-000000000005",
+        "type": "subsection",
+        "title": "C.1. Description of project components",
+        "orderIndex": 1,
+        "metadataJson": null
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000008",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "00000000-0000-4000-8000-000000000007",
+        "type": "text",
+        "title": "C.1. Description of project components",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"Provide a general description of all project components involved in the project. Indicate whether the project involves the construction of new infrastructure or facilities or the renovation or replacement of existing ones. Describe each of the project components in terms of dimensions, quantities, capacities, square footage, etc.\"}"
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000009",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "00000000-0000-4000-8000-000000000007",
+        "type": "text",
+        "title": "C.1. Description of project components",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"Provide a detailed description of the Project Components.\"}"
+      },
+  
+      {
+        "id": "00000000-0000-4000-8000-000000000010",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "00000000-0000-4000-8000-000000000005",
+        "type": "subsection",
+        "title": "C.2. A statement verifying that the project components described in the engineering report are consistent with the EDA investment project description that is provided in Section B.2 of Form ED-900",
+        "orderIndex": 2,
+        "metadataJson": null
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000011",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "00000000-0000-4000-8000-000000000010",
+        "type": "text",
+        "title": "C.2. A statement verifying that the project components described in the engineering report are consistent with the EDA investment project description that is provided in Section B.2 of Form ED-900",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"Engineering reports that describe project components that are inconsistent with the EDA investment project description in Section B.2 of Form ED-900 will not be considered valid.\"}"
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000012",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "00000000-0000-4000-8000-000000000010",
+        "type": "text",
+        "title": "C.2. A statement verifying that the project components described in the engineering report are consistent with the EDA investment project description that is provided in Section B.2 of Form ED-900",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"Provide such a statement.\"}"
+      },
+  
+      {
+        "id": "00000000-0000-4000-8000-000000000013",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "00000000-0000-4000-8000-000000000005",
+        "type": "subsection",
+        "title": "C.3. Drawings",
+        "orderIndex": 3,
+        "metadataJson": null
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000014",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "00000000-0000-4000-8000-000000000013",
+        "type": "text",
+        "title": "C.3. Drawings",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"Drawings showing the general layout and location of the existing site conditions and of the project components as well as location of any project beneficiary identified in Section B.5 of Form ED-900 that provide economic justification for the project, if any. Rough dimensions and quantities for major project components should be shown and labeled on the drawings. Drawings should clearly identify the project components that are being proposed. Applicants are encouraged to clarify such drawings, for example, through color coding, labeling, and other appropriate methods.\"}"
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000015",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "00000000-0000-4000-8000-000000000013",
+        "type": "text",
+        "title": "C.3. Drawings",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"All of the project components must be identified in the plans. Provide one set of 11”x17” drawings if possible. A site plan is required. If the site has a building, a detailed floor plan is required with all of the programing complete. Provide a typical pavement section cut if the project has a roadway.\"}"
+      },
+        {
+        "id": "c4",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "C",
+        "type": "subsection",
+        "title": "C.4. A feasibility analysis for the constructability of the project",
+        "orderIndex": 4,
+        "metadataJson": null
+        },
+        {
+        "id": "c4_1",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c4",
+        "type": "text",
+        "title": "C.4. A feasibility analysis for the constructability of the project",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"Include a review of the existing conditions and note particular features, alignments, and circumstances affecting construction of project components.\"}"
+        },
+        {
+        "id": "c4_2",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c4",
+        "type": "text",
+        "title": "C.4. A feasibility analysis for the constructability of the project",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"Provide a feasibility analysis.\"}"
+        },
+
+        {
+        "id": "c5",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "C",
+        "type": "subsection",
+        "title": "C.5. The proposed method of construction",
+        "orderIndex": 5,
+        "metadataJson": null
+        },
+        {
+        "id": "c5_1",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c5",
+        "type": "text",
+        "title": "C.5. The proposed method of construction",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"Indicate whether construction procurement will be done through competitive bid or other method. Indicate if any portion of the project is to be done by design/build, construction management at risk, the applicant’s own forces, or a third-party construction manager. If an alternate construction procurement method (other than traditional design/bid/build with sealed competitive bid process) is proposed, a construction services procurement plan must be provided to EDA for approval in accordance with EDA’s regulation at 13 C.F.R. § 305.6(a).\"}"
+        },
+        {
+        "id": "c5_2",
+        "templateId": "T9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b191",
+        "parentId": "c5",
+        "type": "text",
+        "title": "C.5. The proposed method of construction",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"Traditional methods of design/bid/build with sealed competitive bids are preferred.\"}"
+        },
+        {
+        "id": "c5_3",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c5",
+        "type": "text",
+        "title": "C.5. The proposed method of construction",
+        "orderIndex": 2,
+        "metadataJson": "{\"defaultText\":\"Indicate the entity that will be responsible for all of the construction contracts and provide a detail of the entity’s required tasks in Item 1 of the Budget Requirements found below in this Report.\"}"
+        },
+
+        {
+        "id": "c6",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "C",
+        "type": "subsection",
+        "title": "C.6. The number of construction contracts anticipated",
+        "orderIndex": 6,
+        "metadataJson": null
+        },
+        {
+        "id": "c6_1",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c6",
+        "type": "text",
+        "title": "C.6. The number of construction contracts anticipated",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"If multiple contracts are proposed, describe the project components included in each contract. If separate contracts are anticipated for demolition or site work, the budget information cost classification should reflect the estimated costs for these components. If project phasing is proposed, a project phasing request must be provided to EDA for approval per EDA’s regulation at 13 C.F.R. § 305.9(a).\"}"
+        },
+        {
+        "id": "c6_2",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c6",
+        "type": "text",
+        "title": "C.6. The number of construction contracts anticipated",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"Provide the number of construction contracts anticipated.\"}"
+        },
+
+        {
+        "id": "c7",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "C",
+        "type": "subsection",
+        "title": "C.7. A current detailed construction cost estimate for each of the project components",
+        "orderIndex": 7,
+        "metadataJson": null
+        },
+        {
+        "id": "c7_1",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c7",
+        "type": "text",
+        "title": "C.7. A current detailed construction cost estimate for each of the project components",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"Show quantities, unit prices, and total costs and provide a basis for the determination of construction contingencies. The total of this estimate should match the construction line item of the SF-424C.\"}"
+        },
+        {
+        "id": "c7_2",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c7",
+        "type": "text",
+        "title": "C.7. A current detailed construction cost estimate for each of the project components",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"Provide a current detailed Architect or Engineer’s opinion of costs.\"}"
+        },
+
+        {
+        "id": "c8",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "C",
+        "type": "subsection",
+        "title": "C.8. Real property acquisition",
+        "orderIndex": 8,
+        "metadataJson": null
+        },
+        {
+        "id": "c8_1",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c8",
+        "type": "text",
+        "title": "C.8. Real property acquisition",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"If the budget includes costs for acquisition of real property, include a current fair market value appraisal completed by a certified appraiser for the property to be purchased.\"}"
+        },
+        {
+        "id": "c8_2",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c8",
+        "type": "text",
+        "title": "C.8. Real property acquisition",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"One appraisal is required from a MAI certified appraisal firm.\"}"
+        },
+
+        {
+        "id": "c9",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "C",
+        "type": "subsection",
+        "title": "C.9. A list of all permits required for the proposed project and their current status",
+        "orderIndex": 9,
+        "metadataJson": null
+        },
+        {
+        "id": "c9_1",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c9",
+        "type": "text",
+        "title": "C.9. A list of all permits required for the proposed project and their current status",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"Identify all permits required; include the timeline to obtain the permits and discuss how the permitting relates to the overall project schedule. If the project crosses a railroad right-of-way or is within a railroad right-of-way, explain any permitting or approvals that may be required from the railroad or other authority and the timeframe for obtaining these permits or approvals.\"}"
+        },
+        {
+        "id": "c9_2",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c9",
+        "type": "text",
+        "title": "C.9. A list of all permits required for the proposed project and their current status",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"Provide a list of all anticipated permits required.\"}"
+        },
+
+        {
+        "id": "c10",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "C",
+        "type": "subsection",
+        "title": "C.10. An overall estimated project schedule",
+        "orderIndex": 10,
+        "metadataJson": null
+        },
+        {
+        "id": "c10_list",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c10",
+        "type": "list",
+        "title": "C.10. An overall estimated project schedule",
+        "orderIndex": 0,
+        "metadataJson": "{\"listType\":\"numbered\",\"items\":[\"design period\",\"period of time to obtain required permits\",\"period of time to obtain any required easements or rights-of-way\",\"solicitation of bids and awarding of contracts\",\"construction period\"]}"
+        },
+        {
+        "id": "c10_2",
+        "templateId": "9f7b1b44-2f75-4d52-9b12-3c6d0e6a4b19",
+        "parentId": "c10",
+        "type": "text",
+        "title": "C.10. An overall estimated project schedule",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"Provide an estimated project schedule.\"}"
+        }
+    ]
+  }

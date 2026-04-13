@@ -1,0 +1,158 @@
+{
+    "nodes": [
+      {
+        "id": "n1",
+        "templateId": "T1",
+        "parentId": null,
+        "type": "text",
+        "title": "Text",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"Generic FER Template: October 2015 Generic Template for Final Engineering Report Instructions\"}"
+      },
+      {
+        "id": "intro",
+        "templateId": "T1",
+        "parentId": null,
+        "type": "section",
+        "title": "Instructions",
+        "orderIndex": 0,
+        "metadataJson": null
+      },
+      {
+        "id": "n2",
+        "templateId": "T1",
+        "parentId": "intro",
+        "type": "text",
+        "title": "Text",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"This document is a generic template for development of a Final Engineering Report (FER) for projects performed under the management of NYSDEC, Division of Environmental Remediation. This document is intended to expedite development of the FER. By providing format and general content guidelines, it is intended to increase the predictability of format and content required for agency approval; shorten the document preparation time by Applicants in the program; improve the quality of draft FER submittals; shorten the review time by NYSDEC; and streamline and expedite the process for FER approval by NYSDEC. This is a generic and non-site-specific guide that does not address all possible NYSDEC or NYSDOH issues. It is not intended to replace DER-10 (Tech Guide) or to act as a substitute for the agency review and comment process. This template may also be used for development of a Construction Completion Report (CCR).\"}"
+      },
+      {
+        "id": "n3",
+        "templateId": "T1",
+        "parentId": "intro",
+        "type": "text",
+        "title": "Text",
+        "orderIndex": 2,
+        "metadataJson": "{\"defaultText\":\"This document contains blue text, green text and highlighted bracketed items. Blue text indicates text that is generally acceptable to NYSDEC for use in the site-specific FER. While it must be applied to each site in a manner that is suitable for site-specific conditions, use of this blue text with minimal changes will generally promote a more timely acceptance of the FER by NYSDEC. Green text provides guidance on the recommended content in each of the specific sections of the FER and should be deleted from this template prior to submittal. Items highlighted in blue brackets are variable and should be entered in a manner that is self-explanatory and specific to each case.\"}"
+      },
+      {
+        "id": "n4",
+        "templateId": "T1",
+        "parentId": "intro",
+        "type": "text",
+        "title": "Text",
+        "orderIndex": 3,
+        "metadataJson": "{\"defaultText\":\"It is strongly recommended that the draft FER submittal to NYSDEC adhere to the following conventions:\"}"
+      },
+  
+      {
+        "id": "n5_list",
+        "templateId": "T1",
+        "parentId": "intro",
+        "type": "list",
+        "title": "Text",
+        "orderIndex": 4,
+        "metadataJson": "{\"listType\":\"bullet\",\"items\":[\"Retain the original blue text color for all blue text that is not changed.\",\"Use black text for all new text, including any changes to blue text.\",\"Delete all green text\"]}"
+      },
+  
+      {
+        "id": "n6_list",
+        "templateId": "T1",
+        "parentId": "intro",
+        "type": "list",
+        "title": "Text",
+        "orderIndex": 5,
+        "metadataJson": "{\"listType\":\"bullet\",\"items\":[\"Remove highlights and brackets\",\"A track changes’ redline/strikeout method should be used for all removal and replacement of blue text.\",\"The redline/strikeout document should be submitted (with blue text strikeouts in the text and not in the margins) along with a clean copy of the draft FER to NYSDEC.\"]}"
+      },
+  
+      {
+        "id": "n7",
+        "templateId": "T1",
+        "parentId": "intro",
+        "type": "text",
+        "title": "Text",
+        "orderIndex": 6,
+        "metadataJson": "{\"defaultText\":\"While this approach is not mandatory, it may greatly shorten the review time required by NYSDEC staff and approval of the document.\"}"
+      },
+      {
+        "id": "n8",
+        "templateId": "T1",
+        "parentId": "intro",
+        "type": "text",
+        "title": "Text",
+        "orderIndex": 7,
+        "metadataJson": "{\"defaultText\":\"The following document is a draft and will be modified and improved periodically. Comments and suggestions for improvement are welcome. Redline/strikeout edits of the template are also welcome. Contact the NYSDEC’s project manager if you would like to make sure that you have the most recent version.\"}"
+      },
+  
+      {
+        "id": "sec_final",
+        "templateId": "T1",
+        "parentId": null,
+        "type": "section",
+        "title": "FINAL ENGINEERING REPORT",
+        "orderIndex": 8,
+        "metadataJson": null
+      },
+  
+      {
+        "id": "sec1",
+        "templateId": "T1",
+        "parentId": "sec_final",
+        "type": "section",
+        "title": "1.0 BACKGROUND AND SITE DESCRIPTION",
+        "orderIndex": 0,
+        "metadataJson": null
+      },
+  
+      {
+        "id": "sec1_p1",
+        "templateId": "T1",
+        "parentId": "sec1",
+        "type": "text",
+        "title": "1.0 BACKGROUND AND SITE DESCRIPTION",
+        "orderIndex": 0,
+        "metadataJson": "{\"defaultText\":\"[Applicant name(s)] entered into a [Brownfield Cleanup Agreement (BCA, State Assistance Contract (SAC), Order on Consent, or Voluntary Cleanup Agreement (VCA)] with the New York State Department of Environmental Conservation (NYSDEC) in [month, year], to investigate and remediate a [size]-acre property located in [village, county, city], New York. The property was remediated to [unrestricted, restricted residential, commercial, industrial] use [if known, enter the following: , and will be used for give specific use] .\"}"
+      },
+  
+      {
+        "id": "sec1_p2",
+        "templateId": "T1",
+        "parentId": "sec1",
+        "type": "text",
+        "title": "1.0 BACKGROUND AND SITE DESCRIPTION",
+        "orderIndex": 1,
+        "metadataJson": "{\"defaultText\":\"The site is located in the County of [county], New York and is identified as [a portion of] Block xxxx and Lot xxx on the [municipality] Tax Map # [tax map number]. The site is situated on an approximately [x]-acre area bounded by [road or feature] to the north, [road or feature] to the south, [road or feature] to the east, and [road or feature] to the west (see Figure 1). The boundaries of the site are fully described in Appendix A: Survey Map, Metes and Bounds.\"}"
+      },
+  
+      {
+        "id": "sec1_p3",
+        "templateId": "T1",
+        "parentId": "sec1",
+        "type": "text",
+        "title": "1.0 BACKGROUND AND SITE DESCRIPTION",
+        "orderIndex": 2,
+        "metadataJson": "{\"defaultText\":\"If the boundaries of the project site in the legal agreement don’t match the tax map boundaries, this should be discussed. Landmarks or other physical boundaries of the project site should be provided. The survey should identify permanent survey markers for horizontal and vertical control of site features.\"}"
+      },
+  
+      {
+        "id": "sec1_p4",
+        "templateId": "T1",
+        "parentId": "sec1",
+        "type": "text",
+        "title": "1.0 BACKGROUND AND SITE DESCRIPTION",
+        "orderIndex": 3,
+        "metadataJson": "{\"defaultText\":\"The site boundaries in detailed in Appendix A must match the boundaries in the legal agreement.\"}"
+      },
+  
+      {
+        "id": "sec1_p5",
+        "templateId": "T1",
+        "parentId": "sec1",
+        "type": "text",
+        "title": "1.0 BACKGROUND AND SITE DESCRIPTION",
+        "orderIndex": 4,
+        "metadataJson": "{\"defaultText\":\"An electronic copy of this FER with all supporting documentation is included as Appendix B.\"}"
+      }
+    ]
+  }
