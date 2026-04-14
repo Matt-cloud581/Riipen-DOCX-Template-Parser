@@ -32,6 +32,31 @@ public sealed class DocxParser
         // Tracks the next sibling order index for each parent node (by parentId).
         var siblingOrder = new Dictionary<Guid, int>();
 
+        // --- Heuristic Engine Preparation ---
+        // Pass 1: Collect all font sizes to determine baseline (body text) font size
+        List<int> allFontSizes = new List<int>();
+        using (WordprocessingDocument wordProcessingDocument = WordprocessingDocument.Open(filePath, false))
+        {
+            Body? body = wordProcessingDocument?.MainDocumentPart?.Document?.Body;
+            ArgumentNullException.ThrowIfNull(body, "Document is empty.");
+            foreach (OpenXmlElement element in body.Elements())
+            {
+                if (element is Paragraph para)
+                {
+                    foreach (var run in para.Elements<Run>())
+                    {
+                        var sz = run.RunProperties?.FontSize?.Val;
+                        if (sz != null && int.TryParse(sz, out int size))
+                        {
+                            allFontSizes.Add(size);
+                        }
+                    }
+                }
+            }
+        }
+        // Compute baseline font size (mode)
+        int baselineFontSize = allFontSizes.Count > 0 ? allFontSizes.GroupBy(x => x).OrderByDescending(g => g.Count()).First().Key : 22;
+
         // Open the DOCX file for reading (read-only mode).
         using (WordprocessingDocument wordProcessingDocument = WordprocessingDocument.Open(filePath, false))
         {
@@ -46,50 +71,134 @@ public sealed class DocxParser
                 // Detect paragraphs styled as headings and emit section/subsection nodes
                 if (element is Paragraph p)
                 {
-                    // Get the paragraph's style (e.g., Heading1) and its text content.
                     string? style = p?.ParagraphProperties?.ParagraphStyleId?.Val;
                     string? text = p?.InnerText?.Trim();
-                    // Skip paragraphs that have no style or no text.
-                    if (string.IsNullOrWhiteSpace(style) || string.IsNullOrWhiteSpace(text))
+                    if (string.IsNullOrWhiteSpace(text))
                         continue;
-                    // Only process paragraphs that match a heading style in the map.
-                    if (!headingMap.TryGetValue(style, out var map))
-                        continue;
-                    var nodeType = map.nodeType;
-                    var level = map.level;
-                    // Maintain heading hierarchy using a stack
-                    while (stack.Count > 0 && stack.Peek().level >= level)
+                    bool isHeading = false;
+                    string nodeType = "paragraph";
+                    int level = 0;
+                    Dictionary<string, object> heuristics = new();
+                    // --- Style-based detection ---
+                    if (!string.IsNullOrWhiteSpace(style) && headingMap.TryGetValue(style, out var map))
                     {
-                        stack.Pop();
-                    }
-                    // Determine the parent node's ID (if any)
-                    Guid? parentId = stack.Count > 0 ? stack.Peek().node.Id : null;
-                    int orderIndex = 0;
-                    // Assign the correct sibling order index for this node under its parent
-                    if (parentId.HasValue)
-                    {
-                        if (!siblingOrder.ContainsKey(parentId.Value)) siblingOrder[parentId.Value] = 0;
-                        orderIndex = siblingOrder[parentId.Value]++;
+                        nodeType = map.nodeType;
+                        level = map.level;
+                        isHeading = true;
+                        heuristics["style"] = style;
                     }
                     else
                     {
-                        if (!siblingOrder.ContainsKey(Guid.Empty)) siblingOrder[Guid.Empty] = 0;
-                        orderIndex = siblingOrder[Guid.Empty]++;
+                        // --- Heuristic detection ---
+                        // Font size (max in paragraph)
+                        int maxFontSize = 0;
+                        foreach (var run in p.Elements<Run>())
+                        {
+                            var sz = run.RunProperties?.FontSize?.Val;
+                            if (sz != null && int.TryParse(sz, out int size))
+                            {
+                                if (size > maxFontSize) maxFontSize = size;
+                            }
+                        }
+                        heuristics["maxFontSize"] = maxFontSize;
+                        // Bold weight
+                        int boldRuns = 0, totalRuns = 0;
+                        foreach (var run in p.Elements<Run>())
+                        {
+                            totalRuns++;
+                            if (run.RunProperties?.Bold != null) boldRuns++;
+                        }
+                        heuristics["boldRuns"] = boldRuns;
+                        heuristics["totalRuns"] = totalRuns;
+                        // Spacing
+                        var spacing = p.ParagraphProperties?.SpacingBetweenLines;
+                        int? before = null, after = null;
+                        if (spacing != null)
+                        {
+                            if (spacing.Before != null && int.TryParse(spacing.Before, out int b)) before = b;
+                            if (spacing.After != null && int.TryParse(spacing.After, out int a)) after = a;
+                        }
+                        heuristics["spacingBefore"] = before;
+                        heuristics["spacingAfter"] = after;
+                        // Numbering pattern
+                        string numberingPattern = "";
+                        var match = System.Text.RegularExpressions.Regex.Match(text, @"^(\d+\.|[A-Z]\.|\([a-zA-Z]\)|\d+(\.\d+)+)");
+                        if (match.Success)
+                        {
+                            numberingPattern = match.Value;
+                        }
+                        heuristics["numberingPattern"] = numberingPattern;
+                        // --- Signal scoring ---
+                        double score = 0;
+                        // Font size: +2 if >= 1.2x baseline
+                        if (maxFontSize >= baselineFontSize * 1.2) score += 2;
+                        // Bold: +1 if all or most runs are bold
+                        if (totalRuns > 0 && boldRuns >= totalRuns * 0.8) score += 1;
+                        // Spacing before: +1 if large
+                        if (before.HasValue && before.Value > 200) score += 1;
+                        // Spacing after: -0.5 if large (body text)
+                        if (after.HasValue && after.Value > 100) score -= 0.5;
+                        // Numbering: +1 if heading-like
+                        if (!string.IsNullOrEmpty(numberingPattern)) score += 1;
+                        // Short text: +0.5 if <= 10 words
+                        int wordCount = text.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
+                        if (wordCount <= 10) score += 0.5;
+                        // Final decision
+                        if (score >= 2.5)
+                        {
+                            isHeading = true;
+                            // Infer level: numbering depth or font size rank
+                            if (!string.IsNullOrEmpty(numberingPattern))
+                            {
+                                int dotCount = numberingPattern.Count(c => c == '.');
+                                level = dotCount + 1;
+                            }
+                            else if (maxFontSize >= baselineFontSize * 1.5)
+                                level = 1;
+                            else if (maxFontSize >= baselineFontSize * 1.3)
+                                level = 2;
+                            else
+                                level = 3;
+                            nodeType = level == 1 ? "section" : level == 2 ? "subsection" : "subsubsection";
+                        }
                     }
-                    // Create a new node for this heading
-                    var node = new Node
+                    if (isHeading)
                     {
-                        Id = Guid.NewGuid(),           // Unique identifier for the node
-                        TemplateId = templateId,        // The template this node belongs to
-                        ParentId = parentId,            // The parent node's ID (null for root)
-                        Type = nodeType,                // Node type (section, subsection, etc.)
-                        Title = text,                   // The heading text
-                        OrderIndex = orderIndex,        // Sibling order under the parent
-                        MetadataJson = "{}"            // Placeholder for additional metadata
-                    };
-                    // Add the node to the list and push it onto the stack for hierarchy tracking
-                    nodes.Add(node);
-                    stack.Push((node, level, orderIndex));
+                        // Maintain heading hierarchy using a stack
+                        while (stack.Count > 0 && stack.Peek().level >= level)
+                        {
+                            stack.Pop();
+                        }
+                        // Determine the parent node's ID (if any)
+                        Guid? parentId = stack.Count > 0 ? stack.Peek().node.Id : null;
+                        int orderIndex = 0;
+                        // Assign the correct sibling order index for this node under its parent
+                        if (parentId.HasValue)
+                        {
+                            if (!siblingOrder.ContainsKey(parentId.Value)) siblingOrder[parentId.Value] = 0;
+                            orderIndex = siblingOrder[parentId.Value]++;
+                        }
+                        else
+                        {
+                            if (!siblingOrder.ContainsKey(Guid.Empty)) siblingOrder[Guid.Empty] = 0;
+                            orderIndex = siblingOrder[Guid.Empty]++;
+                        }
+                        // Create a new node for this heading
+                        var node = new Node
+                        {
+                            Id = Guid.NewGuid(),           // Unique identifier for the node
+                            TemplateId = templateId,        // The template this node belongs to
+                            ParentId = parentId,            // The parent node's ID (null for root)
+                            Type = nodeType,                // Node type (section, subsection, etc.)
+                            Title = text,                   // The heading text
+                            OrderIndex = orderIndex,        // Sibling order under the parent
+                            MetadataJson = System.Text.Json.JsonSerializer.Serialize(heuristics)
+                        };
+                        // Add the node to the list and push it onto the stack for hierarchy tracking
+                        nodes.Add(node);
+                        stack.Push((node, level, orderIndex));
+                        continue;
+                    }
                 }
                 else if (element is Table tbl)
                 // --- Table Extraction ---
@@ -227,7 +336,7 @@ public sealed class DocxParser
                             if (listType == "unknown")
                             {
                                 // If the paragraph has a numbering format, try to get it
-                                var numberingPart = ((WordprocessingDocument)wordProcessingDocument).MainDocumentPart?.NumberingDefinitionsPart;
+                                var numberingPart = wordProcessingDocument.MainDocumentPart?.NumberingDefinitionsPart;
                                 if (numberingPart != null && numId != null)
                                 {
                                     var num = numberingPart.Numbering?.Elements<NumberingInstance>().FirstOrDefault(n => n.NumberID == numId);
