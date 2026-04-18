@@ -56,6 +56,8 @@ public sealed class DocxParser
         }
         // Compute baseline font size (mode)
         int baselineFontSize = allFontSizes.Count > 0 ? allFontSizes.GroupBy(x => x).OrderByDescending(g => g.Count()).First().Key : 22;
+        // Initialize heuristic detector
+        var heuristicDetector = new HeuristicHeadingDetector(baselineFontSize);
 
         // Open the DOCX file for reading (read-only mode).
         using (WordprocessingDocument wordProcessingDocument = WordprocessingDocument.Open(filePath, false))
@@ -89,77 +91,15 @@ public sealed class DocxParser
                     }
                     else
                     {
-                        // --- Heuristic detection ---
-                        // Font size (max in paragraph)
-                        int maxFontSize = 0;
-                        foreach (var run in p.Elements<Run>())
-                        {
-                            var sz = run.RunProperties?.FontSize?.Val;
-                            if (sz != null && int.TryParse(sz, out int size))
-                            {
-                                if (size > maxFontSize) maxFontSize = size;
-                            }
-                        }
-                        heuristics["maxFontSize"] = maxFontSize;
-                        // Bold weight
-                        int boldRuns = 0, totalRuns = 0;
-                        foreach (var run in p.Elements<Run>())
-                        {
-                            totalRuns++;
-                            if (run.RunProperties?.Bold != null) boldRuns++;
-                        }
-                        heuristics["boldRuns"] = boldRuns;
-                        heuristics["totalRuns"] = totalRuns;
-                        // Spacing
-                        var spacing = p.ParagraphProperties?.SpacingBetweenLines;
-                        int? before = null, after = null;
-                        if (spacing != null)
-                        {
-                            if (spacing.Before != null && int.TryParse(spacing.Before, out int b)) before = b;
-                            if (spacing.After != null && int.TryParse(spacing.After, out int a)) after = a;
-                        }
-                        heuristics["spacingBefore"] = before;
-                        heuristics["spacingAfter"] = after;
-                        // Numbering pattern
-                        string numberingPattern = "";
-                        var match = System.Text.RegularExpressions.Regex.Match(text, @"^(\d+\.|[A-Z]\.|\([a-zA-Z]\)|\d+(\.\d+)+)");
-                        if (match.Success)
-                        {
-                            numberingPattern = match.Value;
-                        }
-                        heuristics["numberingPattern"] = numberingPattern;
-                        // --- Signal scoring ---
-                        double score = 0;
-                        // Font size: +2 if >= 1.2x baseline
-                        if (maxFontSize >= baselineFontSize * 1.2) score += 2;
-                        // Bold: +1 if all or most runs are bold
-                        if (totalRuns > 0 && boldRuns >= totalRuns * 0.8) score += 1;
-                        // Spacing before: +1 if large
-                        if (before.HasValue && before.Value > 200) score += 1;
-                        // Spacing after: -0.5 if large (body text)
-                        if (after.HasValue && after.Value > 100) score -= 0.5;
-                        // Numbering: +1 if heading-like
-                        if (!string.IsNullOrEmpty(numberingPattern)) score += 1;
-                        // Short text: +0.5 if <= 10 words
-                        int wordCount = text.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
-                        if (wordCount <= 10) score += 0.5;
-                        // Final decision
-                        if (score >= 2.5)
+                        // --- Heuristic detection (unified pipeline) ---
+                        string? inferred = heuristicDetector.InferHeadingLevel(p);
+                        if (inferred != null)
                         {
                             isHeading = true;
-                            // Infer level: numbering depth or font size rank
-                            if (!string.IsNullOrEmpty(numberingPattern))
-                            {
-                                int dotCount = numberingPattern.Count(c => c == '.');
-                                level = dotCount + 1;
-                            }
-                            else if (maxFontSize >= baselineFontSize * 1.5)
-                                level = 1;
-                            else if (maxFontSize >= baselineFontSize * 1.3)
-                                level = 2;
-                            else
-                                level = 3;
-                            nodeType = level == 1 ? "section" : level == 2 ? "subsection" : "subsubsection";
+                            nodeType = inferred;
+                            // Infer level from nodeType
+                            level = nodeType == "section" ? 1 : nodeType == "subsection" ? 2 : 3;
+                            heuristics["heuristic"] = true;
                         }
                     }
                     if (isHeading)
