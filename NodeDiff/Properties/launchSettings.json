@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NodeDiff": {
+      "commandName": "Project",
+      "workingDirectory": ".."
+    }
+  }
+}

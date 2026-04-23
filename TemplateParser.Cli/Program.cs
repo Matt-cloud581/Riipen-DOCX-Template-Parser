@@ -38,26 +38,18 @@ try
 {
     var result = parser.ParseDocxTemplate(filePath, templateId);
 
-    var json = JsonSerializer.Serialize(result, new JsonSerializerOptions
+    var options = new JsonSerializerOptions
     {
-        WriteIndented = true
-    });
+        WriteIndented = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+    options.Converters.Add(new NodeJsonConverter());
 
-    // TODO (Week 5): Wire parser output into a practical CLI workflow.
-    // Suggested improvements:
-    // - [Week 5] Add optional output path flag (example: --out ./expected/result.json)
-    // - [Week 5] Add better error messages with actionable next steps
-    // - [Week 5] Add integration test-friendly output options
-    // - [Week 6] Add structured logging for debugging parse failures
-    // - Keep CLI focused on input/output flow only
-    // Important: actual DOCX parsing should stay in TemplateParser.Core, not here.
-    if (args.Length >= 4 && string.Equals(args[3], "--out", StringComparison.OrdinalIgnoreCase))
-    {
-        var outputPath = "output.json";
-        File.WriteAllText(outputPath, json);
-        Console.WriteLine($"Wrote parser output to {outputPath}");
-    }
-    else
+    var json = JsonSerializer.Serialize(result, options);
+
+    var outputPath = "output.json";
+    File.WriteAllText(outputPath, json);
+    Console.WriteLine($"Wrote parser output to {outputPath}");
     {
         Console.WriteLine(json);
     }

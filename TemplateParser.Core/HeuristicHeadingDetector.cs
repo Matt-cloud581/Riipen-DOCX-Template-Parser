@@ -57,7 +57,8 @@ namespace TemplateParser.Core
 
             // --- Numbering pattern ---
             string numberingPattern = "";
-            var match = Regex.Match(text, @"^(\d+\.|[A-Z]\.|a|[a-zA-Z])|\d+(\.\d+)+)");
+            // Fixed regex: matches patterns like '1.', 'A.', 'a.', '1.2.3', etc.
+            var match = Regex.Match(text, @"^(\d+\.|[A-Z]\.\s|[a-z]\.\s|[a-zA-Z]\.)|^\d+(\.\d+)+");
             if (match.Success)
             {
                 numberingPattern = match.Value;
