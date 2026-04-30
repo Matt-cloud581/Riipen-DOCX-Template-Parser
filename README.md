@@ -1,63 +1,83 @@
+
 # TemplateParser.NET
 
-TemplateParser.NET is a beginner-friendly .NET 10 starter repository for a 6-week practicum where you will build a DOCX template parser from scratch.
+TemplateParser.NET is a .NET 10 solution for extracting structured content from DOCX templates. It is designed for educational use, with a focus on clarity, extensibility, and robust handling of real-world documents.
 
-This repo is intentionally scaffolded with almost no parser logic so you can practice designing and implementing it yourself.
+## Parsing Strategy
 
-## What You Should Edit
+The parser reads DOCX files using the OpenXML SDK (no Office/Word required). It processes the document body sequentially, mapping each content block (paragraph, table, list, image) to a `Node` object. Hierarchy is inferred using heading styles and heuristics, with parent-child relationships built via a stack.
 
-If you are new, follow this rule:
+- **Headings:** Detected by Word styles (Heading1/2/3) or heuristics (font size, boldness).
+- **Paragraphs:** Non-heading, non-list, non-image paragraphs become `text` nodes.
+- **Lists:** Numbered/bulleted paragraphs are grouped as `list` nodes.
+- **Tables:** Each table is a `table` node with metadata.
+- **Images:** Inline images are extracted as `image` nodes.
 
-- **Main implementation work goes in** `TemplateParser.Core`
-- **Command-line wiring lives in** `TemplateParser.Cli`
-- **Tests go in** `TemplateParser.Tests`
+## Heading Detection Heuristics
 
-Most students should start in `TemplateParser.Core/DocxParser.cs`.
+- **Word Styles:** Heading1 → `section`, Heading2 → `subsection`, Heading3 → `subsubsection`.
+- **Font Size:** Paragraphs with font size above the document mode are candidates.
+- **Boldness:** Bold, large text is more likely a heading.
+- **Fallback:** If no style, use heuristics to infer heading level.
 
-## Project Structure
+**Example:**
+- "Introduction" in Heading1 style → `section` node
+- Large, bold paragraph with no style → `section` (heuristic)
 
-- `TemplateParser.Core`
-  - Domain models (`Node`, `ParserResult`)
-  - `DocxParser` class where parsing behavior should be implemented
-- `TemplateParser.Cli`
-  - Console entry point (`Program.cs`)
-  - Validates input and calls `DocxParser`
-- `TemplateParser.Tests`
-  - xUnit tests
-  - Start by replacing placeholder tests with real parser behavior tests
-- `sample-documents`
-  - Put your input DOCX files here
-- `expected`
-  - Put expected output JSON files or fixtures here
+## How to Run the CLI
 
-## The `Node` Object (Most Important Model)
+From the repo root:
 
-Your parser should ultimately transform DOCX content into a list of `Node` objects.
+```sh
+dotnet run --project TemplateParser.Cli -- parse sample-documents/sample.docx 00000000-0000-0000-0000-000000000000
+```
 
-Each `Node` represents one meaningful piece of parsed content (for example: section, paragraph group, table, list, or image reference).
+- Output: `output.json` in the working directory
+- Arguments: `<filePath> <templateId>`
+- Example output: JSON array of nodes
 
-Fields on `Node`:
+## Integration Instructions
 
-- `Id`: unique identifier for this node
-- `TemplateId`: links every node back to the template being parsed
-- `ParentId`: supports hierarchy (null for root nodes, set for child nodes)
-- `Type`: category of content (for example: `section`, `table`, `list`, `image`)
-- `Title`: human-readable label for the node
-- `OrderIndex`: position in document order
-- `MetadataJson`: extra structured details you want to store
+To use the parser in your own .NET project:
 
-Keep this mental model as you build:
+1. Reference `TemplateParser.Core`.
+2. Call:
 
-- DOCX input -> parse content blocks -> map blocks to `Node` -> return `ParserResult.Nodes`
+```csharp
+var parser = new DocxParser();
+var result = parser.ParseDocxTemplate("path/to/file.docx", Guid.NewGuid());
+foreach (var node in result.Nodes) { /* ... */ }
+```
+3. Ensure `DocumentFormat.OpenXml` NuGet package is installed.
 
-## Can You Create Helper Classes?
+## Known Limitations
 
-Yes. You are encouraged to create helpers when code becomes hard to read.
+- Does not handle nested tables or floating images.
+- Custom numbering/bullet styles may not be detected as lists.
+- Heuristic heading detection may misclassify unusual formatting.
+- Only DOCX files are supported (not DOC, PDF, etc.).
+- No support for tracked changes or comments.
 
-- Good place for parser helpers: inside `TemplateParser.Core` (for example: `TemplateParser.Core/Parsing/` or `TemplateParser.Core/Utilities/`)
-- Keep helper names specific (example: `HeadingExtractor`, `NodeFactory`, `DocxTraversalService`)
-- Avoid putting parsing logic in `TemplateParser.Cli`; keep parsing logic in `TemplateParser.Core`
-- Keep each helper focused on one responsibility
+## Dependency Hygiene
+
+- No Microsoft Office, Word Interop, or Office Automation required.
+- All dependencies are managed via NuGet (`DocumentFormat.OpenXml`).
+- Runs on any machine with .NET 10+.
+
+## Solution Structure Checklist
+
+- `TemplateParser.sln` (solution file)
+- `TemplateParser.Core` (core logic)
+- `TemplateParser.Cli` (command-line interface)
+- `TemplateParser.Tests` (xUnit tests)
+- `sample-documents/` (input DOCX files)
+- `expected/` (expected output JSON)
+- All packages restored via `dotnet restore`, no manual DLLs
+- No Office/Word required
+
+---
+
+For more details, see code comments and test cases in the repository.
 
 ## Suggested 6-Week Path
 
